@@ -1,0 +1,46 @@
+# syntax=docker/dockerfile:1
+# CAMPUS-NOESIS F96-Relocked Clean-Room Lean 4.33.1 Container for Frozen #46 (`Ωλ-W2`)
+#
+# Supply-Chain & Network Scope (`F95-02` & `F96-02` Exact Boundary):
+#   1. Base image pinned by immutable OCI manifest digest (`ubuntu:24.04@sha256:73b999...`).
+#   2. Build phase (`docker build`) uses outbound HTTPS for `apt-get` and downloading the passive
+#      official `lean-4.33.1-linux.tar.zst` archive (`570405234` B, `SHA-256 = 890afd18...af235`),
+#      verified via `sha256sum --check --strict` BEFORE decompression (NOT a build-phase air-gap).
+#   3. Execution phase (`docker run --network=none`) enforces RUNTIME-ONLY network isolation as
+#      unprivileged `nobody` (`65534:65534`), emitting at most `DETACHED_HOST_CANDIDATE` (`F96-01`).
+
+FROM ubuntu:24.04@sha256:73b999393d07f2bf65a40373778a44dc9a6d54ad7718d29247d8ff9413c4d6a8
+
+ENV DEBIAN_FRONTEND=noninteractive
+ARG LEAN_TARBALL_URL="https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux.tar.zst"
+ARG LEAN_TARBALL_SHA256="890afd185370f85666025b883914ab4f4b339136f8c96167b69cfb62aecaf235"
+ARG LEAN_TARBALL_SIZE="570405234"
+ARG PINNED_ZIP46_SHA256="4c42f12b605083d13228c02c84e12b4689cdf32be0f507041b6a36360eec4608"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    python3 \
+    tar \
+    zstd \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /opt/lean-archive /opt/lean && \
+    curl --proto '=https' --tlsv1.2 -fsSL -o /opt/lean-archive/lean-4.33.1-linux.tar.zst "${LEAN_TARBALL_URL}" && \
+    test "$(stat -c%s /opt/lean-archive/lean-4.33.1-linux.tar.zst)" = "${LEAN_TARBALL_SIZE}" && \
+    echo "${LEAN_TARBALL_SHA256}  /opt/lean-archive/lean-4.33.1-linux.tar.zst" | sha256sum --check --strict && \
+    tar --zstd -xf /opt/lean-archive/lean-4.33.1-linux.tar.zst -C /opt/lean --strip-components=1
+
+ENV PATH="/opt/lean/bin:${PATH}"
+
+WORKDIR /audit
+COPY verify_frozen46_zero_shared_third_party.py /audit/verify_frozen46_zero_shared_third_party.py
+COPY CAMPUS_NOESIS_OMEGA_LAMBDA_W2_OUTER_PACKET_AND_SNAPSHOT_REFINEMENT_PACKAGE.zip /audit/CAMPUS_NOESIS_OMEGA_LAMBDA_W2_OUTER_PACKET_AND_SNAPSHOT_REFINEMENT_PACKAGE.zip
+
+RUN echo "${PINNED_ZIP46_SHA256}  /audit/CAMPUS_NOESIS_OMEGA_LAMBDA_W2_OUTER_PACKET_AND_SNAPSHOT_REFINEMENT_PACKAGE.zip" | sha256sum --check --strict && \
+    mkdir -p /audit/out && chown 65534:65534 /audit/out
+
+USER 65534:65534
+
+# Runtime-isolated execution (`RUNTIME_NETWORK_ISOLATED_ONLY__BUILD_PHASE_USES_PINNED_HTTPS`)
+CMD ["python3", "/audit/verify_frozen46_zero_shared_third_party.py", "/audit/CAMPUS_NOESIS_OMEGA_LAMBDA_W2_OUTER_PACKET_AND_SNAPSHOT_REFINEMENT_PACKAGE.zip", "--verify-lean-archive", "/opt/lean-archive/lean-4.33.1-linux.tar.zst", "--output-receipt", "/audit/out/F96_DETACHED_AUDIT_RECEIPT.json"]

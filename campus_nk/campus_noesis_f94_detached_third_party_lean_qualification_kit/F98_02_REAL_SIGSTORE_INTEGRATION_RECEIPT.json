@@ -1,0 +1,77 @@
+{
+  "bound_clean_verification_summary": {
+    "bound_verified_attestation": {
+      "claims_verified_on_same_statement": {
+        "fulcio_certificate_claims": {
+          "build_signer_uri": "https://github.com/cli/cli/.github/workflows/deployment.yml@refs/heads/trunk",
+          "issuer": "https://token.actions.githubusercontent.com",
+          "run_invocation_uri": "https://github.com/cli/cli/actions/runs/13271193192/attempts/1",
+          "runner_environment": "github-hosted",
+          "source_repository_digest": "6899fe21dd80873893dd1a3bf3bdd4d33b1b2338",
+          "source_repository_uri": "https://github.com/cli/cli"
+        },
+        "receipt_sha256_matched_in_dsse_subject": "3a52a68a95d007d0c97f3a0a27f7302872eb31010e69312d20c59e90e0ba1e9f",
+        "slsa_git_commit_sha": "6899fe21dd80873893dd1a3bf3bdd4d33b1b2338",
+        "slsa_invocation_id": "https://github.com/cli/cli/actions/runs/13271193192/attempts/1",
+        "slsa_repository": "https://github.com/cli/cli",
+        "slsa_workflow_path": ".github/workflows/deployment.yml"
+      },
+      "matched_bundle_line_index": 0,
+      "matched_bundle_line_sha256": "83dd4b5ead1829af6e011f1c6452fdb600ba4e94cfa46a4122ca259b66867ff0",
+      "matched_gh_verified_result_index": 0,
+      "verified_canonical_statement_sha256": "91a41dee2bcaacf0751df4c369283d0615dfa48684fba9963a90c5bc453d798e",
+      "verified_dsse_payload_raw_sha256": "ebcee70c87002046f787f5b56bdea98b74287d29ec843e6ed232865aa4a85bc9",
+      "verified_dsse_signatures_sha256": "2cc67839f62cdfc38de3b1d07861c21515343ede0a60812d68823925f912d7b0"
+    },
+    "f97_01_statement_identity_bound": true,
+    "matched_verified_statement_count": 1,
+    "pinned_gh_verify_json_schema": "CLI_CLI_ATTESTATION_PROCESSING_RESULT_LIST_V1",
+    "rejected_verified_entries": [],
+    "rejected_verified_entries_count": 0,
+    "total_bundle_dsse_lines": 1,
+    "total_gh_verified_results": 1,
+    "unverified_bundle_line_indices": []
+  },
+  "executed_at_utc": "2026-11-17T15:34:36Z",
+  "f98_01_pinned_gh_tcb": {
+    "f98_01_gh_binary_baseline_qualified": true,
+    "gh_binary_pin_source": "PINNED_OFFICIAL_GH_v2.67.0_windows_amd64",
+    "gh_binary_resolved_path": "C:\\Users\\당뇨병지회 1\\.gemini\\antigravity\\brain\\e56a54ec-e251-48d1-b3a9-ef1afcc49309\\scratch\\f98_gh_qualification\\win_gh\\bin\\gh.exe",
+    "gh_binary_sha256": "edd3626605c40866f74a3056f681479f7339254f607c0276993a8e0c77dab0c2",
+    "gh_binary_size_bytes": 44162688,
+    "gh_version_header": "gh version 2.67.0 (2025-02-11)",
+    "official_release_metadata": {
+      "binary_size_bytes": 44162688,
+      "official_archive": "gh_2.67.0_windows_amd64.zip",
+      "official_archive_sha256": "3a52a68a95d007d0c97f3a0a27f7302872eb31010e69312d20c59e90e0ba1e9f",
+      "platform": "windows_amd64"
+    },
+    "python_version": "3.11.8",
+    "sigstore_trusted_root": {
+      "mode": "CUSTOM_TRUSTED_ROOT_FILE",
+      "path": "C:\\antigravity work\\Campus\\campus_nk\\campus_noesis_f94_detached_third_party_lean_qualification_kit\\F98_SIGSTORE_PUBLIC_GOOD_TRUSTED_ROOT.jsonl",
+      "sha256": "65ca537f6ed8a47fd0e560c421baa1f6c1efb8b25fc200d8c5c02c0e92eb2b9c"
+    },
+    "tcb_note": "Cryptographic Sigstore Fulcio/Rekor verification relies on the external verifier host's Python 3 runtime, pre-pinned GitHub CLI ('gh') binary, and Sigstore TUF trusted root."
+  },
+  "f98_02_checks": {
+    "f97_01_blocks_real_gh_split_brain_and_unverified_sidecar": true,
+    "real_dsse_envelope_payload_equals_verified_statement": true,
+    "real_fulcio_cert_issuer_repo_commit_workflow_run_bound": true,
+    "real_gh_accepts_partial_mixed_bundle_empirically_confirmed": true,
+    "real_verification_result_statement_schema_verified": true,
+    "tampered_artifact_and_wrong_workflow_promotion_blocked": true,
+    "two_real_signed_bundles_selection_and_strict_guard_verified": true
+  },
+  "frozen46_detached_ci_execution_claimed": false,
+  "qualification_scope": "STAGE_B_VERIFIER_AND_PINNED_GH_2_67_0_SIGSTORE_INTEGRATION_QUALIFICATION_ONLY__NOT_FROZEN46_EXTERNAL_CI_EXECUTION",
+  "real_attested_artifact_name": "gh_2.67.0_windows_amd64.zip",
+  "real_attested_artifact_sha256": "3a52a68a95d007d0c97f3a0a27f7302872eb31010e69312d20c59e90e0ba1e9f",
+  "real_sigstore_bundle_sha256": "b72fa24c5598fe7cf332be4a3410cae0dd8d973692f002aff1831c750c1e7ac1",
+  "schema_version": "CAMPUS_NOESIS_F98_02_REAL_SIGSTORE_INTEGRATION_RECEIPT_V1",
+  "seal": {
+    "algorithm": "SHA-256",
+    "canonicalization": "CAMPUS_CANONICAL_JSON_UTF8_SORTED_KEYS_V1",
+    "payload_sha256": "73e727e41da95bc7b88bdd3dd69292c3545be52ca370842fa68658d52a677544"
+  }
+}

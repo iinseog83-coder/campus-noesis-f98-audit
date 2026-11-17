@@ -1,0 +1,95 @@
+name: F96 Detached Third-Party Lean 4.33.1 Audit & Sigstore Bundle Generation (Release #46 Omega-Lambda W2)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+env:
+  LEAN_ARCHIVE_NAME: lean-4.33.1-linux.tar.zst
+  LEAN_ARCHIVE_URL: https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux.tar.zst
+  LEAN_ARCHIVE_SIZE: "570405234"
+  LEAN_ARCHIVE_SHA256: 890afd185370f85666025b883914ab4f4b339136f8c96167b69cfb62aecaf235
+  LEAN_EXPECTED_COMMIT: 819816b2e0a3bf405af45ae5c7af2491d8f5bee6
+  FROZEN46_ZIP: CAMPUS_NOESIS_OMEGA_LAMBDA_W2_OUTER_PACKET_AND_SNAPSHOT_REFINEMENT_PACKAGE.zip
+  FROZEN46_SHA256: 4c42f12b605083d13228c02c84e12b4689cdf32be0f507041b6a36360eec4608
+
+jobs:
+  detached-lean46-f96-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository (immutable 40-char commit SHA)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Download & SHA-256-verify official Lean 4.33.1 tarball (ZERO elan / ZERO curl|sh)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/lean-archive" "$RUNNER_TEMP/lean-4.33.1"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" "$LEAN_ARCHIVE_URL"
+          ACTUAL_SIZE="$(stat -c%s "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME")"
+          test "$ACTUAL_SIZE" = "$LEAN_ARCHIVE_SIZE"
+          echo "$LEAN_ARCHIVE_SHA256  $RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" | sha256sum --check --strict
+          tar --zstd -xf "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" -C "$RUNNER_TEMP/lean-4.33.1" --strip-components=1
+          echo "$RUNNER_TEMP/lean-4.33.1/bin" >> "$GITHUB_PATH"
+
+      - name: Verify frozen #46 ZIP hash & run F96 guard self-tests (auditor + bundle verifier)
+        run: |
+          set -euo pipefail
+          echo "$FROZEN46_SHA256  $FROZEN46_ZIP" | sha256sum --check --strict
+          python3 campus_nk/campus_noesis_f94_detached_third_party_lean_qualification_kit/verify_frozen46_zero_shared_third_party.py \
+            --self-test-f96-guards
+          python3 campus_nk/campus_noesis_f94_detached_third_party_lean_qualification_kit/verify_f96_provenance_bundle.py \
+            --self-test-f96-bundle-guards
+
+      - name: Execute clean-room 24-module + F95 Clean-Sheet Spec Lean 4.33.1 audit (capped at DETACHED_HOST_CANDIDATE)
+        run: |
+          set -euo pipefail
+          mkdir -p f96_evidence_bundle
+          {
+            echo "github_repository=${GITHUB_REPOSITORY}"
+            echo "github_run_id=${GITHUB_RUN_ID}"
+            echo "github_run_attempt=${GITHUB_RUN_ATTEMPT}"
+            echo "github_sha=${GITHUB_SHA}"
+            echo "runner_os=${RUNNER_OS}"
+            echo "runner_arch=${RUNNER_ARCH}"
+            echo "image_os=${ImageOS:-unknown}"
+            echo "image_version=${ImageVersion:-unknown}"
+            echo "lean_version=$(lean --version)"
+            echo "lean_bin_sha256=$(sha256sum "$(command -v lean)" | awk '{print $1}')"
+            echo "frozen46_zip_sha256=$(sha256sum "$FROZEN46_ZIP" | awk '{print $1}')"
+          } > f96_evidence_bundle/F96_CI_RUNTIME_PROVENANCE.txt
+          python3 campus_nk/campus_noesis_f94_detached_third_party_lean_qualification_kit/verify_frozen46_zero_shared_third_party.py \
+            "$FROZEN46_ZIP" \
+            --verify-lean-archive "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" \
+            --output-receipt f96_evidence_bundle/F96_DETACHED_AUDIT_RECEIPT.json
+
+      # F96-02 / F98: Attestation generation happens AFTER in-process audit; upgrading to
+      # DETACHED_EXECUTION_EVIDENCED requires running verify_f96_provenance_bundle.py OUTSIDE CI!
+      - name: Sign cryptographic SLSA / Sigstore OIDC build provenance attestation
+        id: attest_receipt
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
+        with:
+          subject-path: "f96_evidence_bundle/F96_DETACHED_AUDIT_RECEIPT.json"
+
+      - name: Copy uncompressed Sigstore bundle (.jsonl) & attestation metadata into artifact folder
+        run: |
+          set -euo pipefail
+          cp "${{ steps.attest_receipt.outputs.bundle-path }}" f96_evidence_bundle/F96_SIGSTORE_ATTESTATION_BUNDLE.jsonl
+          {
+            echo "attestation_id=${{ steps.attest_receipt.outputs.attestation-id }}"
+            echo "attestation_url=${{ steps.attest_receipt.outputs.attestation-url }}"
+            echo "receipt_sha256=$(sha256sum f96_evidence_bundle/F96_DETACHED_AUDIT_RECEIPT.json | awk '{print $1}')"
+            echo "sigstore_bundle_sha256=$(sha256sum f96_evidence_bundle/F96_SIGSTORE_ATTESTATION_BUNDLE.jsonl | awk '{print $1}')"
+          } > f96_evidence_bundle/F96_ATTESTATION_METADATA.txt
+
+      - name: Upload detached candidate receipt, Sigstore .jsonl bundle & runtime provenance log
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: f96-detached-lean46-candidate-bundle
+          path: f96_evidence_bundle/*
+          if-no-files-found: error
