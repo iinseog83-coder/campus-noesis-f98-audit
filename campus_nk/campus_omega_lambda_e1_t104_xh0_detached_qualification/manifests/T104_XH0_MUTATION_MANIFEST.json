@@ -1,0 +1,81 @@
+{
+  "manifest_version": "1.0.0",
+  "prelock_policy": "LOCKED_PRIOR_TO_EXTERNAL_CI_EXECUTION__APPEND_ONLY_DESCENDANT_OF_T104",
+  "preserves_parent_t104_mutation_manifest_sha256": "8b3c0a0591162beb95b2e6592f11ae7a1cd43788abb40d6e59ca9f45f083cddf",
+  "qualification_stage": "CAMPUS_OMEGA_LAMBDA_E1_T104_XH0_EXTERNAL_DETACHED_QUALIFICATION",
+  "schema": "CAMPUS_T104_XH0_MUTATION_MANIFEST_V1",
+  "subject_pack": {
+    "filename": "T104_INDEPENDENT_QUALIFICATION_EVIDENCE_PACK.zip",
+    "sha256": "71091172fbb4ba1ddccf05ea5694ed9df049057b5eeb8f7de97c199ce581f1b1",
+    "size_bytes": 650086
+  },
+  "vectors": [
+    {
+      "expected_error_code": "ERR_XH0_C1_LEAN_VERSION_OR_COMMIT_MISMATCH",
+      "expected_outcome": "REJECTED",
+      "forbidden_promotions": [
+        "EXTERNAL_REPLAYED_ATTESTATION_HELD",
+        "EXTERNAL_REPLAY_ATTESTED",
+        "MULTI_HOST_SCOPED_ACCEPTED"
+      ],
+      "perturbation": "Invoke XH0 runner with a synthetic Lean binary reporting non-canonical version 4.34.0 / wrong commit SHA.",
+      "target_gate": "XH0-A / XH0-C (Toolchain Pinning)",
+      "vector_id": "MXH0-01"
+    },
+    {
+      "expected_error_code": "ERR_XH0_B1_INPUT_PACK_HASH_MISMATCH",
+      "expected_outcome": "REJECTED",
+      "forbidden_promotions": [
+        "EXTERNAL_REPLAYED_ATTESTATION_HELD",
+        "EXTERNAL_REPLAY_ATTESTED",
+        "MULTI_HOST_SCOPED_ACCEPTED"
+      ],
+      "perturbation": "Flip 1 byte of a temporary copy of T104_INDEPENDENT_QUALIFICATION_EVIDENCE_PACK.zip prior to XH0-B relock.",
+      "target_gate": "XH0-B (Input Pack Integrity Relock)",
+      "vector_id": "MXH0-02"
+    },
+    {
+      "expected_error_code": "ERR_XH0_D3_ATTESTED_WITHOUT_KERNEL_REPLAY",
+      "expected_outcome": "QUALIFICATION_HELD",
+      "forbidden_promotions": [
+        "EXTERNAL_REPLAY_ATTESTED",
+        "MULTI_HOST_SCOPED_ACCEPTED"
+      ],
+      "perturbation": "Present a cryptographically valid Sigstore attestation bundle while linux_kernel_audit indicates Lean step skipped or Clean-Sheet Spec Probe not executed.",
+      "target_gate": "XH0-D (Signature-vs-Kernel Promotion Firewall)",
+      "vector_id": "MXH0-03"
+    },
+    {
+      "expected_error_code": "ERR_XH0_D4_WORKFLOW_OR_SUBJECT_IDENTITY_MISMATCH",
+      "expected_outcome": "REJECTED",
+      "forbidden_promotions": [
+        "EXTERNAL_REPLAY_ATTESTED",
+        "MULTI_HOST_SCOPED_ACCEPTED"
+      ],
+      "perturbation": "Present a real Sigstore v0.3 bundle signed for a different workflow SAN (F99 f94_github_actions_third_party_lean46.yml) or mismatched repository/workflow identity.",
+      "target_gate": "XH0-D (Fulcio OIDC Workflow & Subject Identity Binding)",
+      "vector_id": "MXH0-04"
+    },
+    {
+      "expected_error_code": "ERR_XH0_E5_STALE_RUN_OR_SUBJECT_REUSE_INVALIDATED",
+      "expected_outcome": "REJECTED",
+      "forbidden_promotions": [
+        "EXTERNAL_REPLAY_ATTESTED",
+        "MULTI_HOST_SCOPED_ACCEPTED"
+      ],
+      "perturbation": "Attempt to reuse a valid signed provenance & attestation bundle from an earlier run_id / commit_sha or against a post-run mutated T104 evidence pack.",
+      "target_gate": "XH0-B / XH0-E (Run Lifecycle & Stale State Invalidation)",
+      "vector_id": "MXH0-05"
+    },
+    {
+      "expected_error_code": null,
+      "expected_outcome": "EXTERNAL_REPLAY_ATTESTED",
+      "forbidden_promotions": [
+        "MULTI_HOST_SCOPED_ACCEPTED"
+      ],
+      "perturbation": "None — canonical T104 pack, official Linux Lean 4.33.1 (SHA-256 890afd18...af235), 28/28 kernel + semantic probes, and valid Sigstore OIDC attestation.",
+      "target_gate": "XH0-A..E End-to-End Positive Qualification (Capped below 105th Tribunal)",
+      "vector_id": "MXH0-06"
+    }
+  ]
+}
