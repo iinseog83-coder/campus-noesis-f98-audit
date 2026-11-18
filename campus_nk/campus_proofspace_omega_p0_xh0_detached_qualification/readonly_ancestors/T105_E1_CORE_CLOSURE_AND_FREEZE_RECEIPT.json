@@ -1,0 +1,109 @@
+{
+  "authority_and_scope_freeze": {
+    "e1_core_lineage_status": "CLOSED_AND_FROZEN_AT_MULTI_HOST_SCOPED_ACCEPTED",
+    "e1d_packet0x03_implementation_authority": "NOT_AUTHORIZED",
+    "e1d_prerequisite_if_opened_later": "Separate static specification & Tribunal review of Packet0x03 4-Gate <-> E1-Core refinement obligations required prior to any E1-D implementation.",
+    "frozen_ancestors_modified_bytes": 0,
+    "general_patch_loop_status": "TERMINATED_PER_105TH_DIRECTIVE",
+    "official_release_47_packaging_authority": "NOT_AUTHORIZED"
+  },
+  "canonical_105th_tribunal_ruling_token": "CAMPUS_NOESIS_OMEGA_LAMBDA_E1_T105_MULTI_HOST_SCOPED_ACCEPTED__T104_XH0_EXTERNAL_REPLAY_ATTESTED__SIGNATURE_AND_SOURCE_BOUND_EVIDENCE_ACCEPTED__GLOBAL_SOUNDNESS_AND_EMPIRICAL_VALIDITY_HELD__E1D_AND_RELEASE47_NOT_AUTHORIZED",
+  "explicit_trust_and_epistemic_boundaries": {
+    "Empirical_and_global_soundness_holds": {
+      "empirical_scientific_discovery_validity": "HELD",
+      "universal_formal_system_soundness": "HELD"
+    },
+    "ci_kernel_execution_vs_tribunal_direct_replay": {
+      "classification": "REPORTED_AND_EVIDENCE_CORROBORATED",
+      "explanation": "28-module Lean 4.33.1 (commit 819816b2e0a3bf405af45ae5c7af2491d8f5bee6) compilation, 3,845-constant SMap audit, and 36-theorem axiom checks were executed on local Windows cleanroom and external GitHub Actions Ubuntu 24.04.5 LTS (Run 44233001801, commit 64922461eb5ae5d909805ebb4c07f2452fb9b0cc). The 105th Tribunal directly verified the 36-entry bundle, 10/10 offline unit tests, public GitHub run/artifact records, and OpenSSL Sigstore cryptographic bindings, without executing a third separate Lean 4.33.1 binary inside the Tribunal sandbox."
+    },
+    "indirect_provenance_binding_scope": {
+      "explanation": "Sigstore signs T104_XH0_SIGNED_PROVENANCE.json (Rekor logIndex 3960361771), binding kernel audit and input pack artifacts transitively via SHA-256. Cryptographic provenance attests execution origin and byte integrity, not universal mathematical truth of all formal specifications.",
+      "signed_subject_document": "T104_XH0_SIGNED_PROVENANCE.json",
+      "signed_subject_sha256": "bd3a7b62ba7f54b4307d239915ee141792a69bcabd206174fa65ad4397b23cbc"
+    },
+    "receipt_issuer_honesty": {
+      "explanation": "Records the 105th Independent Tribunal technical ruling verbatim without claiming that an external Tribunal private key signed this JSON file.",
+      "is_externally_signed_tribunal_certificate": false,
+      "issuer": "AUTHOR_WORKSPACE_APPEND_ONLY_CLOSURE_LEDGER"
+    },
+    "sigstore_trusted_root_boundary": {
+      "classification": "VERIFIED_WITH_PINNED_TRUST_ROOT",
+      "explanation": "Offline X.509/CT/Rekor verification is anchored to the pinned Sigstore Public Good trusted root inherited from the frozen F99 lineage; external root distribution authority was not separately re-bootstrapped out-of-band during T105.",
+      "pinned_trusted_root_file": "F98_SIGSTORE_PUBLIC_GOOD_TRUSTED_ROOT.jsonl",
+      "pinned_trusted_root_sha256": "65ca537f6ed8a47fd0e560c421baa1f6c1efb8b25fc200d8c5c02c0e92eb2b9c"
+    }
+  },
+  "frozen_lineage_digests": {
+    "frozen_e1_core_aux_bundle_zip": {
+      "filename": "OMEGA_LAMBDA_E1_CORE_AUX_BUNDLE.zip",
+      "sha256": "38a055f39e259cac333b469bfb4602ed8b3859cb5f6bfa3e096a75be0200da39",
+      "size_bytes": 190589,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_f100_100th_tribunal_receipt_json": {
+      "filename": "F100_TRIBUNAL_100TH_INDEPENDENT_REPLAY_RECEIPT.json",
+      "sha256": "e7cfb738c45071f67e7a56e39c87613197a5e65c9abf95368f2b47b9d7477298",
+      "size_bytes": 5453,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_f99_evidence_bundle_zip": {
+      "filename": "F99_DETACHED_CI_RUN_44121693289_EVIDENCE_BUNDLE.zip",
+      "sha256": "26310ec2154d760a77fb2c8a764ba2fbc5c0ede092e4616e0b840f1db8ac311f",
+      "size_bytes": 75053,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_release_40_zip": {
+      "filename": "CAMPUS_NOESIS_OMEGA_KAPPA_STAGE1_0_PURE_TRUSTED_CHECKER_PACKAGE.zip",
+      "sha256": "93d9a02a84d6d91a36140de2c96cb362e26aa1b2c595ca3ac9562ddf8e3426bb",
+      "size_bytes": 100029,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_release_46_zip": {
+      "filename": "CAMPUS_NOESIS_OMEGA_LAMBDA_W2_OUTER_PACKET_AND_SNAPSHOT_REFINEMENT_PACKAGE.zip",
+      "sha256": "4c42f12b605083d13228c02c84e12b4689cdf32be0f507041b6a36360eec4608",
+      "size_bytes": 236214,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_t104_qualification_pack_zip": {
+      "filename": "T104_INDEPENDENT_QUALIFICATION_EVIDENCE_PACK.zip",
+      "sha256": "71091172fbb4ba1ddccf05ea5694ed9df049057b5eeb8f7de97c199ce581f1b1",
+      "size_bytes": 650086,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_t104_xh0_ci_run_44233001801_raw_zip": {
+      "filename": "t104-xh0-detached-qualification-bundle.zip",
+      "sha256": "14eaf9e2ebd22a33eea1f2085807f24406beea2a5ef1994af98f51b0d4f8e6dd",
+      "size_bytes": 14809,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_t104_xh0_detached_tribunal_receipt_json": {
+      "filename": "T104_XH0_DETACHED_TRIBUNAL_RECEIPT.json",
+      "sha256": "5a8e0320edb7790ed4c713c61055532e52a4670cd210f52fafdcb0cc8c0d2840",
+      "size_bytes": 1956,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    },
+    "frozen_t105_complete_submission_bundle_zip": {
+      "filename": "T105_SUBMISSION_T104_AND_XH0_COMPLETE_EVIDENCE_BUNDLE.zip",
+      "sha256": "b78abf1c788b8d2c554f48562f218b81c48df8fee9e14175e9592f67d22f8aae",
+      "size_bytes": 1359070,
+      "status": "FROZEN_IMMUTABLE_VERIFIED"
+    }
+  },
+  "qualification_stage": "CAMPUS_OMEGA_LAMBDA_E1_T105_SCOPED_CLOSURE_AND_FREEZE",
+  "schema": "CAMPUS_T105_E1_CORE_CLOSURE_AND_FREEZE_RECEIPT_V1",
+  "seal": {
+    "algorithm": "SHA-256",
+    "canonicalization": "CAMPUS_CANONICAL_JSON_UTF8_SORTED_KEYS_V1",
+    "payload_sha256": "ccb4ce289d9d7392459f4d17ccbafca08e0566dd5e146f6c380a57c898ca0f24"
+  },
+  "tribunal_105_direct_verification_summary": {
+    "external_github_actions_run_44233001801_corroborated": true,
+    "offline_tests_passed": "10/10 (T104 6/6 + XH0 4/4)",
+    "openssl_sigstore_offline_replay_passed": true,
+    "rekor_log_index": 3960361771,
+    "scoped_qualification_verdict": "MULTI_HOST_SCOPED_ACCEPTED",
+    "t105_bundle_entries_verified": "36/36",
+    "t105_bundle_sha256": "b78abf1c788b8d2c554f48562f218b81c48df8fee9e14175e9592f67d22f8aae"
+  }
+}
