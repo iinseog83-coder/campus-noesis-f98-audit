@@ -1,0 +1,80 @@
+name: PCT0-XH0 External Detached Lean 4.33.1 & Sigstore Qualification (Proofspace Omega PCT-S1/S2 v3)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/pct0_xh0_detached_s1s2_qualification.yml"
+      - "campus_nk/CAMPUS_PROOFSPACE_OMEGA_PCT0_S1S2_MINIMAL_FORMALIZATION_BUNDLE.zip"
+      - "campus_nk/campus_proofspace_omega_pct0_xh0_detached_qualification/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+env:
+  LEAN_ARCHIVE_NAME: lean-4.33.1-linux.tar.zst
+  LEAN_ARCHIVE_URL: https://github.com/leanprover/lean4/releases/download/v4.33.1/lean-4.33.1-linux.tar.zst
+  LEAN_ARCHIVE_SIZE: "570405234"
+  LEAN_ARCHIVE_SHA256: 890afd185370f85666025b883914ab4f4b339136f8c96167b69cfb62aecaf235
+  LEAN_EXPECTED_COMMIT: 819816b2e0a3bf405af45ae5c7af2491d8f5bee6
+  PCT0_S1S2_BUNDLE_PATH: campus_nk/CAMPUS_PROOFSPACE_OMEGA_PCT0_S1S2_MINIMAL_FORMALIZATION_BUNDLE.zip
+  PCT0_S1S2_BUNDLE_SHA256: 0700fd1cf3225b1b791d5d3dc35cc05ef925acf1ebc443bab8b73d5a4884025e
+
+jobs:
+  detached-pct0-xh0-linux-qualification:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository (immutable commit SHA, persist-credentials=false)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Download & SHA-256-verify official Lean 4.33.1 Linux tarball (zero elan / zero curl|sh)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/lean-archive" "$RUNNER_TEMP/lean-4.33.1"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" "$LEAN_ARCHIVE_URL"
+          ACTUAL_SIZE="$(stat -c%s "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME")"
+          test "$ACTUAL_SIZE" = "$LEAN_ARCHIVE_SIZE"
+          echo "$LEAN_ARCHIVE_SHA256  $RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" | sha256sum --check --strict
+          tar --zstd -xf "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" -C "$RUNNER_TEMP/lean-4.33.1" --strip-components=1
+          echo "$RUNNER_TEMP/lean-4.33.1/bin" >> "$GITHUB_PATH"
+
+      - name: Execute XH0-G1..G5 Raw Linux 8-module Lean 4.33.1 + TransDeps + 5-Mutation Causal Span Replay
+        run: |
+          set -euo pipefail
+          echo "$PCT0_S1S2_BUNDLE_SHA256  $PCT0_S1S2_BUNDLE_PATH" | sha256sum --check --strict
+          mkdir -p pct0_xh0_evidence_bundle
+          python3 campus_nk/campus_proofspace_omega_pct0_xh0_detached_qualification/src/pct0_xh0_linux_runner.py \
+            --s1s2-bundle "$PCT0_S1S2_BUNDLE_PATH" \
+            --lean-archive "$RUNNER_TEMP/lean-archive/$LEAN_ARCHIVE_NAME" \
+            --require-lean-archive \
+            --out-dir pct0_xh0_evidence_bundle
+
+      - name: Sign SLSA v1 / Sigstore OIDC provenance attestation on PCT0_XH0_SIGNED_PROVENANCE.json
+        id: attest_pct0_xh0
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
+        with:
+          subject-path: "pct0_xh0_evidence_bundle/PCT0_XH0_SIGNED_PROVENANCE.json"
+
+      - name: Copy uncompressed Sigstore bundle (.jsonl) & attestation metadata
+        run: |
+          set -euo pipefail
+          cp "${{ steps.attest_pct0_xh0.outputs.bundle-path }}" pct0_xh0_evidence_bundle/PCT0_XH0_SIGSTORE_BUNDLE.jsonl
+          {
+            echo "attestation_id=${{ steps.attest_pct0_xh0.outputs.attestation-id }}"
+            echo "attestation_url=${{ steps.attest_pct0_xh0.outputs.attestation-url }}"
+            echo "provenance_subject_sha256=$(sha256sum pct0_xh0_evidence_bundle/PCT0_XH0_SIGNED_PROVENANCE.json | awk '{print $1}')"
+            echo "sigstore_bundle_sha256=$(sha256sum pct0_xh0_evidence_bundle/PCT0_XH0_SIGSTORE_BUNDLE.jsonl | awk '{print $1}')"
+          } > pct0_xh0_evidence_bundle/PCT0_XH0_ATTESTATION_METADATA.txt
+
+      - name: Upload PCT0-XH0 Linux raw qualification & Sigstore bundle artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pct0-xh0-detached-qualification-bundle
+          path: pct0_xh0_evidence_bundle/*
+          if-no-files-found: error
